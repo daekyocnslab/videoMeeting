@@ -1,0 +1,71 @@
+/* @import url('./notosanskr.css'); */
+/*@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css); */
+@import url(//cdn.rawgit.com/hiun/NanumSquare/master/nanumsquare.css);
+
+*{font-family: NanumSquare, Noto Sans KR, sans-serif, dotum, 돋움 !important;-webkit-text-size-adjust:none; box-sizing: border-box;}
+html, body, h1, h2, h3, h4, h5, h6, p, span, em, ul, ol{margin:0;padding:0}
+h1, h2, h3, h4, h5, h6, p, span, em{line-height:1}
+p{letter-spacing:-0.4px}
+li{list-style:none}
+a{text-decoration:none;}
+em{font-style:normal}
+button img{display:block;}
+
+#wrap {width:100%;height:100%;position: fixed; left: 0; right: 0; top:0; bottom: 0;background-color:#e7e9e3;display:table;}
+.header {position: absolute; top: 0; left: 0; right: 0; height:84px; background-color:#78b9c3;}
+.header > .title {float:left; color: #fff; font-size:26px; margin-left:28px; line-height:80px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
+.header > .button {float:right; margin:18px 24px;}
+.main {position: absolute; top:108px; left: 0; right: 0; margin: 0 auto; width:1080px; height:624px;text-align: center;}
+.main > .left {position: absolute; left:0; top:0; bottom:0; width:220px;}
+.main > .left > .meeting li {width:220px; height: 150px; border:2px solid #fff; border-radius: 8px; margin-bottom:8px;}
+.main > .left > .meeting li > video {width:215px; height: 145px; border-radius: 6px; display: inline;}
+.main > .content1 {position: absolute; left:230px; top: 0; bottom: 0; right:0; background-color:#fff; border:3px solid #b0cc49; border-radius: 8px;}
+.main > .content1 > img {margin: 0;position: absolute; top: 50%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);}
+.main > .content1 > div > .close {width:100%; height:46px;background-color: rgba(0,0,0,0.6);display: block;border-top-left-radius: 6px;border-top-right-radius: 6px;text-align: right;padding: 14px; z-index: 100; position: absolute;}
+.main > .content1 > div > #screenDiv {position: absolute;}
+.main > .content1 > div > #screenDiv > #screenView {position: relative; z-index: 1;}
+.main > .content1 > div > #screenDiv > #screenCView {position: relative; z-index: 2;}
+.main > .content1 > div > .toolbar {position: absolute;right:0;bottom:0;margin-right:4px;margin-bottom:0; z-index: 3}
+.main > .content1 > div > .toolbar > span {display: inline-block;float:left;}
+.main > .content1 > div > .toolbar > .span {background-image: url('/api/resources/image/toolbar_icon_01.png'); background-repeat: no-repeat; width:67px; height:55px;}
+.main > .content1 > div > .toolbar > .span > input {margin-top: 15px;}
+.main > .content2 {position: absolute; left:230px; top: 0; bottom: 0; right:0; background-color:#fff; border:3px solid #f0b14d; border-radius: 8px;}
+.main > .content2 > canvas {border-radius: 8px;}
+.main > .content2 > .toolbar {position: absolute;right:0;bottom:0;margin-right:4px;margin-bottom:0;}
+.main > .content2 > .toolbar > span {display: inline-block;float:left;}
+.main > .content2 > .toolbar > .span {background-image: url('/api/resources/image/toolbar_icon_01.png'); background-repeat: no-repeat; width:67px; height:55px;}
+.main > .content2 > .toolbar > .span > input {margin-top: 15px;}
+.main > .content3 {position: absolute; left:230px; top: 0; bottom: 0; right:0; background-color:#fff; border:3px solid #f0b14d; border-radius: 8px;}
+.main > .content3 > #silde {position: relative; overflow:hidden; width:100%; height:100%; z-index: 1;}
+.main > .content3 > #silde > ul {position:absolute; top: 0; left: 0; font-size: 0; margin: 0 auto;}
+.main > .content3 > #silde > ul > li{display: inline-block; padding-top: 10px;}
+.main > .content3 > #silde > .back {position: absolute; width: 50px; height: 100%; background-color:#fff; padding-top: 255px; left: 0; cursor: pointer; z-index: 3;}
+.main > .content3 > #silde > .next {position: absolute; width: 50px; height: 100%; background-color:#fff; padding-top: 255px; right: 0; cursor: pointer; z-index: 3;}
+.main > .content3 > .toolbar {position: absolute;right:0;bottom:0;margin-right:4px;margin-bottom:0; z-index: 2;}
+.main > .content3 > .toolbar > span {display: inline-block;float:left;}
+.main > .content3 > .toolbar > .span {background-image: url('/api/resources/image/toolbar_icon_01.png'); background-repeat: no-repeat; width:67px; height:55px;}
+.main > .content3 > .toolbar > .span > input {margin-top: 15px;}
+.main > .content3 > .close {width:100%; height:46px;background-color: rgba(0,0,0,0.6);display: block;border-top-left-radius: 6px;border-top-right-radius: 6px;text-align: right;padding: 14px; z-index: 100; position: absolute;}
+.error {display:table-cell;vertical-align: middle;text-align: center;}
+
+/* email style */
+.e_title {margin:40px 0; color: #7d7e79; font-size:38px; font-weight: bold; text-align: center; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
+.form_area {width:620px; margin:0 auto;/*overflow: hidden;*/}
+.form_area > div {margin-bottom:14px;}
+.form_area > div > span {display:block;}
+.form_area > div > span.select_box {display:inline-block;}
+.form_area > div > span > input,
+.form_area > div > span > select {display:inline-block;height:40px;border:1px solid #fff;border-radius:6px;background-color: #fff; color: #78b9c3;font-size:16px;font-weight:600;padding-left:16px;margin-bottom: 10px;} 
+.form_area > div.start_time {width:38%;float:left;}
+.form_area > div.end_time {width:62%;float:left;}
+.form_area .stitle {color: #7d7e79; font-size:18px; font-weight:500;padding-left:4px;line-height:36px;}
+.form_area .box1 {width: 620px;}
+.form_area .box2 {width: 130px;}
+.form_area .box3 {width: 90px;margin-left:6px;}
+.form_area .box4 {width: 90px;}
+.form_area .box1:hover {border:1px solid #78b9c3;}
+.btn_send {text-align: right;}
+.btn_send > button {width: 180px;height:40px;border:0;border-radius:6px;background-color: #78b9c3; color: #fff;font-size:16px;font-weight:600;cursor: pointer;}
+.btn_send > button:hover {background-color: #5a97a0;}
+
+.btn_app {display:table-cell;vertical-align: middle;text-align: center;}

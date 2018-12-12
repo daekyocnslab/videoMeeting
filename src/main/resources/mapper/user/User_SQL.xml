@@ -3,15 +3,9 @@
 
 <mapper namespace="user">
     
-	<select id="selectLogin" resultType="UserVO" parameterType="UserVO">
+	<select id="info" resultType="UserVO" parameterType="UserVO">
 		<![CDATA[
-		SELECT * FROM TB_VIDEO_MEETING_USER WHERE USER_ID = #{userId} AND USER_PW = #{userPw} AND ENABLED = '1'
- 		]]>
-	</select>
-	
-	<select id="selectUser" resultType="UserVO" parameterType="String">
-		<![CDATA[
-		SELECT * FROM TB_VIDEO_MEETING_USER WHERE USER_ID = #{userId}
+		SELECT * FROM TB_VIDEO_MEETING_USER WHERE USER_NAME LIKE '%'||#{userName}||'%' AND ENABLED = '1'
  		]]>
 	</select>
 </mapper>

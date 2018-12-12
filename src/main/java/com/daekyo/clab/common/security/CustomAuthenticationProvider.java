@@ -20,6 +20,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@Resource(name="userService")
 	private UserService userService;
 	
+	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String userName = (String) auth.getPrincipal();
 		String password = (String) auth.getCredentials();
@@ -43,6 +44,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		}
 	}
 
+	@Override
 	public boolean supports(Class<?> arg0) {
 		return true;
 	}

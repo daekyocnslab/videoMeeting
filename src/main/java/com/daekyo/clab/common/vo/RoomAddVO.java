@@ -1,7 +1,6 @@
 package com.daekyo.clab.common.vo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.daekyo.clab.room.RoomVO;
 
@@ -19,17 +18,12 @@ public class RoomAddVO {
 		return instance;
 	}
 	
-	private List<RoomVO> list = new ArrayList<>();
+	private ConcurrentHashMap<String, RoomVO> roomList = new ConcurrentHashMap<>();
 
-	public List<RoomVO> getList() {
-		return list;
+	public ConcurrentHashMap<String, RoomVO> getRoomList() {
+		return roomList;
 	}
-
-	public void setList(List<RoomVO> list) {
-		this.list = list;
-	}
-
-	public static void setInstance(RoomAddVO instance) {
-		RoomAddVO.instance = instance;
+	public void setRoomList(ConcurrentHashMap<String, RoomVO> roomList) {
+		this.roomList = roomList;
 	}
 }

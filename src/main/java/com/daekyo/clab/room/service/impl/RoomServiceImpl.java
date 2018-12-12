@@ -3,7 +3,10 @@ package com.daekyo.clab.room.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -11,6 +14,8 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,6 +26,7 @@ import com.daekyo.clab.common.dao.MybatisDAO;
 import com.daekyo.clab.common.vo.RoomAddVO;
 import com.daekyo.clab.room.RoomVO;
 import com.daekyo.clab.room.service.RoomService;
+import com.daekyo.clab.user.UserVO;
 
 @Service("roomService")
 public class RoomServiceImpl implements RoomService{
@@ -30,12 +36,15 @@ public class RoomServiceImpl implements RoomService{
 	@Autowired
 	private JavaMailSenderImpl mailSender;
 	
+	@Resource(name="emailProperties")
+	private Properties eProperties;
+	
 	@Resource(name="mybatisDAO")
 	private MybatisDAO mybatisDAO;
 
 	@Override
-	public String insertRoom(RoomVO roomVO) throws Exception {
-		String result = "000";
+	public int insertRoom(RoomVO roomVO) throws Exception {
+		int result = 000;
 		
 		try {
 			List<String> list = new ArrayList<>();
@@ -58,11 +67,22 @@ public class RoomServiceImpl implements RoomService{
 			for(int i=0; i<list.size(); i++) {
 				emails[i] = list.get(i);
 			}
-			
-			System.out.println(emails.length);
+
 			String roomId = UUID.randomUUID().toString().replace("-", "");
-			String url = "http://localhost:8080/room/videoMeeting/" + roomId;
-			//String url = "https://itlab1.daekyocns.co.kr:8443/api/room/videoMeeting/" + roomId;
+			String url = String.format(new String(eProperties.getProperty("email.url").getBytes("ISO-8859-1"), "UTF-8") + roomId, roomVO.getUrl().getProtocol(), roomVO.getUrl().getAuthority());
+
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+			
+			Date startDate = simpleDateFormat.parse(roomVO.getStartDate());
+			Date endDate = simpleDateFormat.parse(roomVO.getEndDate());
+			
+			SimpleDateFormat startDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
+			SimpleDateFormat endDateFormat = new SimpleDateFormat("HH:mm");
+			
+			String date = startDateFormat.format(startDate) + "~" + endDateFormat.format(endDate);
+			
+			String subject = String.format(new String(eProperties.getProperty("email.subject").getBytes("ISO-8859-1"), "UTF-8"), roomVO.getTitle());
+			String text = String.format(new String(eProperties.getProperty("email.text").getBytes("ISO-8859-1"), "UTF-8"), roomVO.getFromName(), roomVO.getFromEmail(), roomVO.getTitle(), date, url, url);
 			
 			MimeMessagePreparator preparator = new MimeMessagePreparator() {
 				@Override
@@ -70,8 +90,8 @@ public class RoomServiceImpl implements RoomService{
 					MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 		            helper.setFrom(roomVO.getFromEmail());
 		            helper.setTo(emails);
-		            helper.setSubject("화상회의 예약입니다.");
-		            helper.setText(roomVO.getContents() + roomVO.getStartDate() + roomVO.getEndDate() + url, true);
+		            helper.setSubject(subject);
+		            helper.setText(text, true);
 				}	
 			};
 			
@@ -79,17 +99,30 @@ public class RoomServiceImpl implements RoomService{
 		
 			RoomAddVO roomAddVO = RoomAddVO.getInstance();
 			roomVO.setRoomId(roomId);
-			roomVO.setMaxPersons(4);
-			roomAddVO.getList().add(roomVO);
-			
-			for(int i=0; i<roomAddVO.getList().size(); i++) {
-				log.debug(roomAddVO.getList().get(i).getRoomId());
-			}
+			roomVO.setMaxPersons(list.size());
+			roomAddVO.getRoomList().put(roomId, roomVO);
 		}catch(Exception e) {
-			result = "999";
+			result = 999;
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public HashMap<String, Object> selectUserInfo(UserVO userVO) throws Exception{
+		int result = 000;
+		HashMap<String, Object> hashMap = new HashMap<>();
+		
+		try {
+			List<UserVO> list = mybatisDAO.selectList("user.info", userVO);
+			hashMap.put("list", list);
+		}catch (Exception e) {
+			result = 999;
+		}
+		
+		hashMap.put("result", result);
+		
+		return hashMap;
 	}
 
 	@Override
@@ -101,21 +134,57 @@ public class RoomServiceImpl implements RoomService{
 		
 		RoomAddVO roomAddVO = RoomAddVO.getInstance();
 		
-		for(int i=0; i<roomAddVO.getList().size(); i++) {
-			if(roomAddVO.getList().get(i).getRoomId().equals(roomId)) {
-				if(roomAddVO.getList().get(i).getList().size() < roomAddVO.getList().get(i).getMaxPersons()) {
-					int startDate = date.compareTo(simpleDateFormat.parse(roomAddVO.getList().get(i).getStartDate())); 
-					int endDate = date.compareTo(simpleDateFormat.parse(roomAddVO.getList().get(i).getEndDate()));
-					
-					if(startDate >= 0 && 0 >= endDate) {
-						result = 000;
-					}
-				}else {
-					result = 998;
+		if(roomAddVO.getRoomList().get(roomId) != null) {
+			//if(roomAddVO.getRoomList().get(roomId).getUserList().size() < roomAddVO.getRoomList().get(roomId).getMaxPersons()) {
+				int startDate = date.compareTo(simpleDateFormat.parse(roomAddVO.getRoomList().get(roomId).getStartDate())); 
+				int endDate = date.compareTo(simpleDateFormat.parse(roomAddVO.getRoomList().get(roomId).getEndDate()));
+				
+				if(startDate >= 0 && 0 >= endDate) {
+					result = 000;
 				}
-			}
+			/*}else {
+				result = 998;
+			}*/
 		}
 		
 		return result;
+	}
+
+	@Override
+	public String deleteRoom() throws Exception {
+		JSONObject jsonObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+		Date date = new Date();
+		
+		RoomAddVO roomAddVO = RoomAddVO.getInstance();
+		
+		Iterator<String> keys = roomAddVO.getRoomList().keySet().iterator();
+
+		while(keys.hasNext()) {
+			String key = keys.next();
+			JSONObject object = new JSONObject();
+			object.put("roomId", key);
+			
+			if(roomAddVO.getRoomList().get(key).getUserList().size() == 0) {
+				int endDate = date.compareTo(simpleDateFormat.parse(roomAddVO.getRoomList().get(key).getEndDate()));
+				
+				if(0 <= endDate) {
+					object.put("result", "000");
+					
+					roomAddVO.getRoomList().remove(key);
+				}else {
+					object.put("result", "999");
+				}
+			}else {
+				object.put("result", "998");
+			}
+			jsonArray.add(object);
+		}
+		
+		jsonObject.put("result", jsonArray);
+		
+		return jsonObject.toJSONString();
 	}
 }

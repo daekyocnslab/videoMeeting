@@ -10,12 +10,14 @@
             <list>
                 <value>/WEB-INF/config/properties/database.properties</value>
                 <value>/WEB-INF/config/properties/email.properties</value>
+                <value>/WEB-INF/config/properties/fileupload.properties</value>
             </list>
         </property>
 	   <!-- <property name="properties" ref="jdbcConfiguration"/> -->
 	</bean>
 	
-	<!-- <util:properties id="jdbcConfiguration" location="/WEB-INF/config/properties/database.properties"/>
-	<util:properties id="emailProperties" location="/WEB-INF/config/properties/email.properties"/>-->
+	<!-- <util:properties id="jdbcConfiguration" location="/WEB-INF/config/properties/database.properties"/>-->
+	<util:properties id="emailProperties" location="/WEB-INF/config/properties/email.properties"/>
 	<util:properties id="fileUploadProperties" location="/WEB-INF/config/properties/fileupload.properties"/>
+	<util:properties id="websocketProperties" location="/WEB-INF/config/properties/websocket.properties"/>
 </beans>
